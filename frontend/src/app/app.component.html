@@ -1,14 +1,31 @@
 <div class="app-container">
   <!-- Navbar -->
   <nav class="navbar glass-panel">
-    <div class="logo">
-      <span class="logo-icon">⚡</span>
-      <span class="logo-text">NeoBank</span>
-    </div>
-    <div class="nav-links">
-      <a routerLink="/" class="nav-item">Home</a>
-      <a routerLink="/login" class="nav-item">Login</a>
-      <a routerLink="/register" class="nav-item btn-primary">Sign Up</a>
+    <div class="nav-content">
+      <a routerLink="/" class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">NeoBank</span>
+      </a>
+
+      <div class="menu-toggle" (click)="toggleMenu()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+
+      <div class="nav-links" [class.active]="isMenuOpen">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">Home</a>
+
+        <ng-container *ngIf="!isLoggedIn">
+          <a routerLink="/login" routerLinkActive="active" class="nav-item">Login</a>
+          <a routerLink="/register" routerLinkActive="active" class="nav-item btn-primary">Sign Up</a>
+        </ng-container>
+
+        <ng-container *ngIf="isLoggedIn">
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">Dashboard</a>
+          <a routerLink="/profile" routerLinkActive="active" class="nav-item">Profile</a>
+        </ng-container>
+      </div>
     </div>
   </nav>
 
@@ -16,6 +33,43 @@
   <div class="content-wrapper">
     <router-outlet></router-outlet>
   </div>
+
+  <!-- Footer -->
+  <footer class="footer glass-panel">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>NeoBank</h3>
+        <p>The future of digital banking. Secure, fast, and reliable financial solutions for the modern world.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a routerLink="/">Home</a></li>
+          <li><a routerLink="/login">Login</a></li>
+          <li><a routerLink="/register">Register</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Connect</h4>
+        <div class="social-links">
+          <a href="#">Twitter</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 NeoBank. All rights reserved.</p>
+    </div>
+  </footer>
 
   <!-- Background Elements -->
   <div class="bg-gradient-1"></div>
@@ -27,9 +81,12 @@
     position: relative;
     min-height: 100vh;
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
+  /* Navbar */
   .navbar {
     position: fixed;
     top: 20px;
@@ -38,11 +95,17 @@
     width: 90%;
     max-width: 1200px;
     height: 70px;
+    z-index: 1000;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-content {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 24px;
-    z-index: 1000;
   }
 
   .logo {
@@ -52,17 +115,19 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: white;
+    text-decoration: none;
   }
 
   .logo-icon {
     background: var(--gradient-1);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     align-items: center;
   }
 
@@ -70,19 +135,110 @@
     font-weight: 500;
     opacity: 0.8;
     transition: 0.3s;
+    position: relative;
+    text-decoration: none;
+    color: white;
   }
 
-  .nav-item:hover {
+  .nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--accent-color);
+    transition: width 0.3s;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
     opacity: 1;
     color: var(--accent-color);
+  }
+
+  .nav-item.active::after {
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
   }
 
   .content-wrapper {
     padding-top: 100px;
     /* Space for Navbar */
-    min-height: 100vh;
+    flex: 1;
+    /* Pushes footer down */
     position: relative;
     z-index: 10;
+  }
+
+  /* Footer */
+  .footer {
+    margin: 40px auto 20px;
+    width: 90%;
+    max-width: 1200px;
+    padding: 40px;
+    color: #ccc;
+    position: relative;
+    z-index: 10;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-bottom: 30px;
+  }
+
+  .footer-section h3 {
+    color: white;
+    margin-bottom: 15px;
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .footer-section h4 {
+    color: white;
+    margin-bottom: 15px;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 10px;
+  }
+
+  .footer-section a {
+    color: #999;
+    transition: 0.3s;
+  }
+
+  .footer-section a:hover {
+    color: var(--primary-color);
+  }
+
+  .footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    font-size: 0.9rem;
   }
 
   /* Ambient Backgrounds */
@@ -108,5 +264,33 @@
     filter: blur(100px);
     z-index: 1;
     animation: float 15s infinite ease-in-out reverse;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .menu-toggle {
+      display: flex;
+    }
+
+    .nav-links {
+      position: absolute;
+      top: 70px;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      flex-direction: column;
+      padding: 20px 0;
+      gap: 20px;
+      transform: translateY(-200%);
+      transition: 0.3s;
+      border-radius: 0 0 16px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: none;
+    }
+
+    .nav-links.active {
+      transform: translateY(0);
+    }
   }
 </style>

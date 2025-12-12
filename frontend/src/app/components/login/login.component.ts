@@ -15,16 +15,16 @@ import { ApiService } from '../../services/api.service';
         <p class="subtitle">Login to manage your finances</p>
         
         <form (ngSubmit)="onSubmit()">
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Email</label>
             <input type="email" [(ngModel)]="email" name="email" required placeholder="name@example.com">
           </div>
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Password</label>
             <input type="password" [(ngModel)]="password" name="password" required placeholder="••••••••">
           </div>
           
-          <button type="submit" class="btn-primary w-100">Login</button>
+          <button type="submit" class="btn-primary w-100 mt-3" style="font-size: 1.1rem; padding: 14px;">Login</button>
         </form>
         
         <div class="footer-links">
@@ -122,7 +122,7 @@ export class LoginComponent {
   onSubmit() {
     this.api.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.token);
+        // Token handled in service
         this.router.navigate(['/dashboard']);
       },
       error: (err) => alert(err.error.msg || 'Login Failed')

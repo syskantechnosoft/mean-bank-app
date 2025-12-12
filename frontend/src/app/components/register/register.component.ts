@@ -15,33 +15,33 @@ import { ApiService } from '../../services/api.service';
         <p class="subtitle">Join NeoBank today</p>
         
         <form (ngSubmit)="onSubmit()">
-          <div class="form-row">
-             <div class="form-group">
+          <div class="form-row d-flex gap-3">
+             <div class="form-group w-50">
                 <label>Name</label>
                 <input type="text" [(ngModel)]="data.name" name="name" required placeholder="John Doe">
              </div>
-             <div class="form-group">
+             <div class="form-group w-50">
                 <label>Phone</label>
                 <input type="text" [(ngModel)]="data.phone" name="phone" placeholder="123 456 7890">
              </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Email</label>
             <input type="email" [(ngModel)]="data.email" name="email" required placeholder="john@example.com">
           </div>
 
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Password</label>
             <input type="password" [(ngModel)]="data.password" name="password" required placeholder="••••••••">
           </div>
 
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Address</label>
-            <textarea [(ngModel)]="data.address" name="address" rows="2" placeholder="Street, City, Country"></textarea>
+            <textarea [(ngModel)]="data.address" name="address" rows="3" placeholder="Street, City, Country"></textarea>
           </div>
 
-          <button type="submit" class="btn-primary w-100">Sign Up</button>
+          <button type="submit" class="btn-primary w-100 mt-3" style="padding: 16px; font-size: 1.1rem;">Sign Up</button>
         </form>
         
         <div class="footer-links">
@@ -111,7 +111,7 @@ export class RegisterComponent {
   onSubmit() {
     this.api.register(this.data).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.token);
+        // Token handled in service
         this.router.navigate(['/dashboard']);
       },
       error: (err) => alert(err.error.msg || 'Registration Failed')
